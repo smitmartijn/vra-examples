@@ -1,0 +1,34 @@
+if(payload != null) 
+{
+  // go through the payload dict and output all keys & values
+  var payloadKeys = payload.keys.sort()
+  payloadKeys.forEach(function(key) {
+    outputProperties(key, payload.get(key), "");
+  });
+} 
+else { 
+  System.debug("Payload is null");
+}
+
+// out the key & value to the log. Recursively run through other properties stores if found
+function outputProperties(keyName, keyValue, keyParent) 
+{
+  var keyValueType = System.getObjectType(keyValue);
+  // if it's a Properties dict, recursive run through it and output it's key & values pairs
+  if(keyValueType == "Properties") 
+  {
+    var payloadKeys = keyValue.keys.sort()
+    payloadKeys.forEach(function(k){
+      outputProperties(k, keyValue.get(k), keyParent+keyName + ".");
+    });
+  } 
+  else 
+  {
+    // sanity check
+    if(keyValue == "") {
+      keyValue = "null";
+    }
+    System.debug(keyParent + keyName + ":" + keyValueType + ": " + keyValue);
+  }
+}
+
